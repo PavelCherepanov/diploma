@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
-
+import notificationLogo from '../assets/check-circle.svg';
+import styles from "../App.css";
 import axios from 'axios';
+import { startCampaign } from '../Func';
 
 const GetHelp = () => {
-    const CharityArtifact = require('../Charity.json')
     const { ethers } = require("ethers");
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
@@ -18,60 +19,14 @@ const GetHelp = () => {
         department: ''
     })
 
+    const [notificationSuccess, setNotificationSuccess] = React.useState('');
 
-    // async function sendFileToIPFS(e) {
-
-    //     if (fileImg) {
-    //         try {
-    
-    //             const formData = new FormData();
-    //             formData.append("file", fileImg);
-    
-    //             const resFile = await axios({
-    //                 method: "post",
-    //                 url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
-    //                 data: formData,
-    //                 headers: {
-    //                     'pinata_api_key': `${process.env.REACT_APP_PINATA_API_KEY}`,
-    //                     'pinata_secret_api_key': `${process.env.REACT_APP_PINATA_API_SECRET}`,
-    //                     "Content-Type": "multipart/form-data"
-    //                 },
-    //             });
-    
-    //             const ImgHash = `ipfs://${resFile.data.IpfsHash}`;
-    //          console.log(ImgHash); 
-    // //Take a look at your Pinata Pinned section, you will see a new file added to you list.   
-    
-    
-    
-    //         } catch (error) {
-    //             console.log("Error sending File to IPFS: ")
-    //             console.log(error)
-    //         }
-    //     }
-    // }
-
-    async function savePrayer(e) {
-        e.preventDefault();
-        const prayer = { title, description, imgUrl, deadline };
-        console.log(prayer);
-        console.log("xsxsaxsaxsa-------------------------------")
-        console.log(process.env.REACT_APP_PINATA_API_KEY)
-        console.log(process.env.REACT_APP_PINATA_API_SECRET)
-        const provider = new ethers.providers.Web3Provider(window.ethereum)
-        const constractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3'
-        const signer = provider.getSigner()
-        // sendFileToIPFS()
-
-        let address = await signer.getAddress()
-        const contract = new ethers.Contract(constractAddress, CharityArtifact.abi, signer)
-        
+    async function sendFileToIPFS() {
         if (fileImg) {
             try {
-    
                 const formData = new FormData();
                 formData.append("file", fileImg);
-                
+
                 const resFile = await axios({
                     method: "post",
                     url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
@@ -82,41 +37,38 @@ const GetHelp = () => {
                         "Content-Type": "multipart/form-data"
                     },
                 });
-               
-                console.log()
-    
                 const ImgHash = `ipfs://${resFile.data.IpfsHash}`;
-                setImgUrl(ImgHash)
-             console.log(ImgHash); 
-    //Take a look at your Pinata Pinned section, you will see a new file added to you list.   
-    
-    
-    
+                return "https://ipfs.io/ipfs/" + resFile.data.IpfsHash
+
             } catch (error) {
-                console.log("Error sending File to IPFS: ")
-                console.log(error)
+                console.log("Error sending File to IPFS: " + error)
             }
         }
-
-        const charity = await contract.startCampaign(title, description, imgUrl, deadline)
-
-        
-
-
-
-
-
     }
+
+    async function savePrayer(e) {
+        e.preventDefault();        
+        const imgIPFSUrl = sendFileToIPFS()
+        await startCampaign(title, description, imgIPFSUrl, deadline)
+    }
+
+    function showNotisfactionSuccess() {
+        let element = document.getElementsByClassName('notisfaction');
+        element.className = styles.container;
+        document.body.appendChild(element);
+    }
+
+
     return (
         <div className='container'>
             <br /> <br />
             <div className='row'>
                 <div className='card col-md-6 offset-md-3 offset-md-3'>
-                    <h2 className='text-center'>Название формы</h2>
+                    <h2 className='text-center'>Создание благотворительного фонда</h2>
                     <div className='card-body'>
                         <form >
                             <div className='form-group mb-2'>
-                                <label className='form-label'>Заголовок:</label>
+                                <label className='form-label'>Название:</label>
                                 <input
                                     type='text'
                                     placeholder='Введите краткий заголовок'
@@ -145,15 +97,15 @@ const GetHelp = () => {
                             </div>
 
                             <div className='form-group mb-2'>
-                                <label className='form-label'>Ссылка на картинку:</label>
+                                <label className='form-label'>Картинка:</label>
                                 <input
-                                
+
                                     type='file'
                                     placeholder=''
                                     name='imgUrl'
-                                    value={imgUrl}
+                                    // value={imgUrl}
                                     className={`form-control ${errors.imgUrl ? 'is-invalid' : ''}`}
-                                    onChange={(e) =>setFileImg(e.target.files[0]) }
+                                    onChange={(e) => setFileImg(e.target.files[0])}
                                 >
                                 </input>
                                 {errors.imgUrl && <div className='invalid-feedback'> {errors.imgUrl} </div>}
@@ -174,14 +126,23 @@ const GetHelp = () => {
                             </div>
 
 
-                            <button className='btn btn-success' onClick={savePrayer} >Отправить</button>
+                            <button className='btn btn-success' onClick={savePrayer}>Создать</button>
                         </form>
 
                     </div>
                 </div>
-
+                <div class="notification">
+                    <div class="notification__body">
+                        <img
+                            src={notificationLogo}
+                            alt="Success"
+                            class="notification__icon"
+                        />
+                        Благотворительный фонд создается &#128640;
+                    </div>
+                    <div class="notification__progress"></div>
+                </div>
             </div>
-
         </div>
     );
 }

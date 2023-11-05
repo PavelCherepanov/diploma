@@ -28,21 +28,6 @@ const Header = (props) => {
 
                 </nav>
             </header>
-            {/* <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-    
-    <a href="index.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-        <svg class="bi me-2" width="40" height="32"></svg>
-        <span class="fs-2">Crypto|Technologies</span>
-    </a>
-    
-    <ul class="nav nav-pills">
-        <li class="nav-item"><a href="index.html" class="nav-link active" aria-current="page">Home</a></li>
-        <li class="nav-item"><a href="history.html" class="nav-link">History</a></li>
-        <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-        <li class="nav-item"><a href="education.html" class="nav-link">Education</a></li>
-        <li class="nav-item"><a href="products.html" class="nav-link">Products</a></li>
-    </ul>
-</header> */}
         </div>
     );
 }

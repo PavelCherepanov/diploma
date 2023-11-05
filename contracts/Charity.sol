@@ -10,7 +10,7 @@ contract Charity {
     // event CampaignStarted(bytes32 campaignId, address initiator);
     event CampaignStarted(uint256 campaignId, address initiator);
     event WithdrawFunds(bytes32 campaignId, address initiator, uint256 amount);
-    event FundsDonated(bytes32 campaignId, address donor, uint256 amount);
+    event FundsDonated(uint256 campaignId, address donor, uint256 amount);
 
     // Counters.Counter public _campaignCount;
     
@@ -27,7 +27,7 @@ contract Charity {
     }
 
     mapping(bytes32=>Campaign) public _campaigns;
-    mapping(address=>mapping(bytes32=>uint256)) public userCampaignDonations;
+    mapping(address=>mapping(uint256=>uint256)) public userCampaignDonations;
     mapping(uint=>Campaign) public campaigns;
     constructor(){}
 
@@ -44,7 +44,7 @@ contract Charity {
        return campaignId;
     }
 
-    function startCampaign( string calldata title, string calldata description, string calldata imgUrl, uint256 deadline ) public {
+    function startCampaign(string calldata title, string calldata description, string calldata imgUrl, uint256 deadline ) public {
         // generate a campaignID 
         // using the title, description and the address of the initiator
         bytes32 campaignId = generateCampaignId(msg.sender, title, description);
@@ -74,9 +74,9 @@ contract Charity {
     function endCampaign() public {}
 
     // allows users to donate to a charity campaign of their choice
-    function donateToCampaign(bytes32 campaignId) public payable {
+    function donateToCampaign(uint256 campaignId) public payable {
         // get campaign details with the given campaign
-        Campaign storage campaign = _campaigns[campaignId];
+        Campaign storage campaign = campaigns[campaignId];
 
         // end the campaign if the deadline is exceeded
         if(block.timestamp > campaign.deadline){

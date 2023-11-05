@@ -1,15 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import FooterComponent from './components/FooterComponent';
 import HeaderComponent from './components/HeaderComponent';
 import GetHelpComponent from './components/GetHelpComponent';
 import HelpComponent from './components/HelpComponent';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CampagnComponent from './components/CampagnComponent';
-// const hre = require("hardhat");
-// const CharityArtifact = require('../artifacts/contracts/Charity.sol/Charity.json')
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import CampaignComponent from './components/CampaignComponent';
+import NotFoundComponent from './components/NotFoundComponent';
+import CampaignNotFoundComponent from './components/CampaignNotFoundComponent';
 
 function App() {
   const { ethers } = require("ethers");
@@ -42,10 +41,12 @@ function App() {
       <BrowserRouter>
         <HeaderComponent balance={wallet} address={address} />
         <Routes>
-          <Route path='/' element={<GetHelpComponent />}></Route>
-          <Route path='/get-help' element={<GetHelpComponent />}></Route>
-          <Route path='/help' element={<HelpComponent />}></Route>
-          <Route path='/help/:id' element={<CampagnComponent />}></Route>
+          <Route path='*' element={<NotFoundComponent/>}></Route>
+          <Route path='/' element={<HelpComponent/>}></Route>
+          <Route path='/get-help' element={<GetHelpComponent/>}></Route>
+          <Route path='/help' element={<HelpComponent/>}></Route>
+          <Route path='/help/:id' element={<CampaignComponent/>}></Route> 
+          <Route path='/campaign-not-found' element={<CampaignNotFoundComponent/>}></Route>
         </Routes>
 
 
