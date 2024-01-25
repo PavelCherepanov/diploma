@@ -1,0 +1,33 @@
+npm init -y
+npm install --save-dev hardhat
+npx hardhat
+npx hardhat compile 
+npx hardhat node
+npx hardhat run scripts/sam --network localhost
+npx create-react-app public
+
+npm install -D tailwindcss
+npx tailwindcss init
+
+npm install --save ethers
+npm install --save react-router-dom
+npm install --save-dev @nomicfoundation/hardhat-toolbox
+
+const Hash = require('ipfs-only-hash')
+  const fs = require('fs');
+  
+  function readFile(input) {
+    let file = input.target.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function() {
+      const hash = Hash.of(reader.result)
+      console.log(hash) 
+      console.log("QmRkTRG9ViYbChVpdBToi2DAewfntTyqJvQWLmUAW3yXKU")
+    };
+    reader.onerror = function() {
+      console.log(reader.error);
+    };
+
+  }
+
